@@ -1,11 +1,29 @@
 import { Link } from "react-router-dom";
 import { RootState } from "../../state/store";
 import { useSelector } from "react-redux";
+import { useState, useEffect } from "react";
+import logoImage from "../../assets/logos/navbar-m-menu.png"; // Adjust the path as necessary
 
 import "./Navigation.css";
 
 const Navigation = () => {
   const userType = useSelector((state: RootState) => state.user.value);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [viewPortWidth, setViewPortWidth] = useState(window.innerWidth);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setViewPortWidth(window.innerWidth);
+      if (window.innerWidth > 1024) setMenuOpen(false);
+    };
+    window.addEventListener("resize", handleResize);
+
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  function handleMenuClick() {
+    setMenuOpen(!menuOpen);
+  }
 
   return (
     <nav className="navbar">
@@ -14,11 +32,25 @@ const Navigation = () => {
           <p className="navbar-brand">HealthCare Portal</p>
         </Link>
       </div>
-      <ul>
-        {userType === 0 && NotloggedNavigation()}
-        {userType === 1 && doctorNavigation()}
-        {userType === 2 && patientNavigation()}
-      </ul>
+      <div
+        className={`navbar-m-button ${menuOpen ? "navbar-m-button-open" : ""}`}
+        onClick={() => {
+          handleMenuClick();
+        }}
+      >
+        <img src={logoImage} alt="navbar-button" className="navbar-button" />
+      </div>
+      <div className={`navbar-list ${menuOpen ? "navbar-open" : ""}`}>
+        <ul
+          className={`${
+            viewPortWidth > 1024 ? "navbar-list-ul" : "navbar-list-ul-m"
+          }`}
+        >
+          {userType === 0 && NotloggedNavigation()}
+          {userType === 1 && doctorNavigation()}
+          {userType === 2 && patientNavigation()}
+        </ul>
+      </div>
     </nav>
   );
 };
