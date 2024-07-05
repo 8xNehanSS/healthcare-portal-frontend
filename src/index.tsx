@@ -12,7 +12,7 @@ import { RootState } from "./state/store";
 import { endLoader } from "./state/loader/loaderSlice";
 
 // pages
-import Layout from "./pages/Layout";
+import Layout from "./components/layout/Layout";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import AboutUs from "./pages/About";
@@ -42,9 +42,10 @@ export default function App() {
   return (
     <BrowserRouter>
       <Routes>
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Login />} />
         <Route path="/" element={<Layout />}>
           <Route index element={<Home />} />
-          <Route path="login" element={<Login />} />
           <Route path="about-us" element={<AboutUs />} />
         </Route>
       </Routes>
