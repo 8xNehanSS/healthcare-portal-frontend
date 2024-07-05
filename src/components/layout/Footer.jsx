@@ -5,9 +5,10 @@ const Footer = () => {
   return (
     <footer>
       <div className="container">
-        <p>HealthCare Portal</p>
-        <p>All Rights Reserved 2024</p>
-        <p>Developed by Nehan Sudasinghe</p>
+        <p>&copy; 2024 HealthCare Portal. All rights reserved.</p>
+        <p>
+          Developed by <span className="dev-name">Nehan Sudasinghe.</span>
+        </p>
       </div>
     </footer>
   );

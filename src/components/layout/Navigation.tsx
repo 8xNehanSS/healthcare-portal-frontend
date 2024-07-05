@@ -2,7 +2,8 @@ import { Link } from "react-router-dom";
 import { RootState } from "../../state/store";
 import { useSelector } from "react-redux";
 import { useState, useEffect } from "react";
-import logoImage from "../../assets/logos/navbar-m-menu.png"; // Adjust the path as necessary
+import menuImage from "../../assets/logos/navbar-m-menu.png";
+import logoImage from "../../assets/logos/healthcare_logo.png";
 
 import "./Navigation.css";
 
@@ -29,7 +30,7 @@ const Navigation = () => {
     <nav className="navbar">
       <div className="navbar-brand">
         <Link to="/">
-          <p className="navbar-brand">HealthCare Portal</p>
+          <img src={logoImage} alt="logo" className="logo" />
         </Link>
       </div>
       <div
@@ -38,7 +39,7 @@ const Navigation = () => {
           handleMenuClick();
         }}
       >
-        <img src={logoImage} alt="navbar-button" className="navbar-button" />
+        <img src={menuImage} alt="navbar-button" className="navbar-button" />
       </div>
       <div className={`navbar-list ${menuOpen ? "navbar-open" : ""}`}>
         <ul
