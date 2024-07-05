@@ -1,4 +1,12 @@
 .loader {
-  align-items: center;
   display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.loader-text {
+  font-size: 1.5rem;
+  font-weight: 500;
+  color: #333;
 }
