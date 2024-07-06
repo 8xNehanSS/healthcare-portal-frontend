@@ -1,14 +1,17 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { RootState } from "../../state/store";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useState, useEffect } from "react";
 import menuImage from "../../assets/logos/navbar-m-menu.png";
 import logoImage from "../../assets/logos/healthcare_logo.png";
 
 import "./Navigation.css";
+import { unsetLogged } from "../../state/logged/logSlice";
+import Logout from "../../utils/Logout";
 
 const Navigation = () => {
   const userType = useSelector((state: RootState) => state.user.value);
+  const logStatus = useSelector((state: RootState) => state.log.value);
   const [menuOpen, setMenuOpen] = useState(false);
   const [viewPortWidth, setViewPortWidth] = useState(window.innerWidth);
 
@@ -48,8 +51,8 @@ const Navigation = () => {
           }`}
         >
           {userType === 0 && NotloggedNavigation()}
-          {userType === 1 && doctorNavigation()}
-          {userType === 2 && patientNavigation()}
+          {logStatus && userType === 1 && DoctorNavigation()}
+          {logStatus && userType === 2 && PatientNavigation()}
         </ul>
       </div>
     </nav>
@@ -77,7 +80,14 @@ function NotloggedNavigation() {
   );
 }
 
-function doctorNavigation() {
+function DoctorNavigation() {
+  const dispatch = useDispatch();
+
+  const HandleLogout = async () => {
+    localStorage.removeItem("token");
+    dispatch(unsetLogged());
+    await Logout();
+  };
   return (
     <>
       <li>
@@ -98,14 +108,23 @@ function doctorNavigation() {
       <li>
         <Link to="/faq">FAQ</Link>
       </li>
-      <li>
-        <Link to="/logout">Logout</Link>
+      <li onClick={HandleLogout}>
+        <a href="/login" onClick={(e) => e.preventDefault()}>
+          Logout
+        </a>
       </li>
     </>
   );
 }
 
-function patientNavigation() {
+function PatientNavigation() {
+  const dispatch = useDispatch();
+
+  const HandleLogout = async () => {
+    localStorage.removeItem("token");
+    dispatch(unsetLogged());
+    await Logout();
+  };
   return (
     <>
       <li>
@@ -126,8 +145,10 @@ function patientNavigation() {
       <li>
         <Link to="/faq">FAQ</Link>
       </li>
-      <li>
-        <Link to="/logout">Logout</Link>
+      <li onClick={HandleLogout}>
+        <a href="/login" onClick={(e) => e.preventDefault()}>
+          Logout
+        </a>
       </li>
     </>
   );
