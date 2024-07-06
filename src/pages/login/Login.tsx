@@ -40,7 +40,6 @@ const Login: React.FC = () => {
       });
 
       if (response.ok) {
-        localStorage.setItem("token", "123");
         if (type === 1) {
           dispatch(setDoctor());
         } else {
