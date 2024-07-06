@@ -5,7 +5,7 @@ interface LoaderState {
 }
 
 const initialState: LoaderState = {
-  value: 1,
+  value: 0,
 };
 
 const userSlice = createSlice({
