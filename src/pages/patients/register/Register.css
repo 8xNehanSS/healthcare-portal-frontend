@@ -1,0 +1,80 @@
+/* Register.css */
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  max-width: 400px;
+  margin: auto;
+  margin-top: 20px;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+}
+
+label {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="number"],
+input[type="date"],
+input[type="password"] {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+button {
+  padding: 10px 20px;
+  border: none;
+  background-color: #007bff;
+  color: white;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+button[type="submit"] {
+  margin-top: 10px;
+}
+
+.form-p {
+  text-align: center;
+  font-size: large;
+  font-weight: 500;
+}
+
+.form-error {
+  color: red;
+  font-size: small;
+}
+
+.disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.disabled:hover {
+  background-color: #ccc;
+}
+
+.form-error-float {
+  position: relative;
+
+  background-color: #f8d7da;
+  padding: 10px;
+  border: 1px solid #f5c6cb;
+  border-radius: 4px;
+  margin-top: 10px;
+}
+
+.float-hide {
+  display: none;
+}

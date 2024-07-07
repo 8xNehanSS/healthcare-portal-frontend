@@ -33,6 +33,7 @@ const Login: React.FC = () => {
       }
       const response = await fetch("http://localhost:3000/login", {
         method: "POST",
+        credentials: "include",
         headers: {
           "Content-Type": "application/json",
         },
@@ -64,6 +65,7 @@ const Login: React.FC = () => {
   useEffect(() => {
     const checkTokenValidity = async () => {
       const data = await CheckLogin();
+      console.log(data);
       if (data.valid) {
         if (data.type === 1) {
           dispatch(setDoctor());

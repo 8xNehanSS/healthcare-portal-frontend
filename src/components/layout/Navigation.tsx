@@ -65,13 +65,13 @@ function NotloggedNavigation() {
   return (
     <>
       <li>
+        <Link to="/home">Home</Link>
+      </li>
+      <li>
         <Link to="/what-people-say">Reviews</Link>
       </li>
       <li>
         <Link to="/login">Login</Link>
-      </li>
-      <li>
-        <Link to="/register">Register</Link>
       </li>
       <li>
         <Link to="/faq">FAQ</Link>
@@ -84,7 +84,8 @@ function DoctorNavigation() {
   const dispatch = useDispatch();
 
   const HandleLogout = async () => {
-    localStorage.removeItem("token");
+    document.cookie =
+      "Authorization=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
     dispatch(unsetLogged());
     await Logout();
   };

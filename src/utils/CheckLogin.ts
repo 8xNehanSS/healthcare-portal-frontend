@@ -10,7 +10,7 @@ const CheckTokenStatus = async () => {
 
     if (response.ok) {
       const data = await response.json();
-      return { valid: true, type: data.login, userID: data.user.userID };
+      return { valid: true, type: data.loginType, userID: data.login };
     } else {
       return { valid: false, type: 0, userID: 0 };
     }
@@ -21,7 +21,7 @@ const CheckTokenStatus = async () => {
 };
 
 async function CheckLogin() {
-  let checkUser = { valid: false, type: 0, userID: 123 };
+  let checkUser = { valid: false, type: 0, userID: 0 };
   checkUser = await CheckTokenStatus();
   return checkUser;
 }

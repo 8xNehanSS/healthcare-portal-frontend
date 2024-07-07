@@ -20,6 +20,8 @@ import AboutUs from "./pages/About";
 // components
 import Loader from "./components/common/Loader";
 import "./index.css";
+import Patients from "./pages/patients/Patients";
+import RegisterPatients from "./pages/patients/register/Register";
 
 export default function App() {
   const loader = useSelector((state: RootState) => state.loader.value);
@@ -46,7 +48,9 @@ export default function App() {
           <Route index element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Login />} />
-          <Route path="about-us" element={<AboutUs />} />
+          <Route path="/about-us" element={<AboutUs />} />
+          <Route path="/patients" element={<Patients />} />
+          <Route path="/patients/register" element={<RegisterPatients />} />
         </Route>
       </Routes>
     </BrowserRouter>
