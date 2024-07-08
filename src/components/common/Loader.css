@@ -13,5 +13,9 @@
 .loader-text {
   font-size: 1.5rem;
   font-weight: 500;
-  color: #333;
+}
+
+.loader-light {
+  background-color: #dbdbdb;
+  color: #000;
 }

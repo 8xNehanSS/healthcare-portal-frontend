@@ -112,6 +112,12 @@
 }
 
 .login-radio-inputs .login-radio input:checked + .login-name {
-  background-color: #fff;
+  background-color: #f7814e;
   font-weight: 600;
+}
+
+.login-error {
+  color: red;
+  font-size: 14px;
+  margin: 0;
 }

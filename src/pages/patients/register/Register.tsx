@@ -10,6 +10,7 @@ import {
 } from "../../../state/user/userSlice";
 import CheckLogin from "../../../utils/CheckLogin";
 import FloatLoader from "../../../components/common/FloatLoader";
+import { setUser } from "../../../state/data/dataSlice";
 
 const Register = () => {
   const [firstName, setFirstName] = useState("");
@@ -55,6 +56,7 @@ const Register = () => {
     const valid = await CheckUsername();
     if (valid) return;
     setLoading(true);
+    const type = 2;
     const data = {
       firstName,
       lastName,
@@ -64,6 +66,7 @@ const Register = () => {
       birthday,
       username,
       password,
+      type,
     };
     const response = await fetch("http://localhost:3000/register", {
       method: "POST",
@@ -238,11 +241,12 @@ const Register = () => {
   useEffect(() => {
     const checkTokenValidity = async () => {
       const data = await CheckLogin();
-      if (data.valid) {
+      if (data && data.valid) {
+        dispatch(setUser(data));
         dispatch(setLogged());
-        if (data.type === 1) {
+        if (data.loginType === 1) {
           dispatch(setDoctor());
-        } else if (data.type === 2) {
+        } else if (data.loginType === 2) {
           dispatch(setPatient());
         } else {
           dispatch(setPublic());

@@ -8,14 +8,22 @@ import logoImage from "../../assets/logos/healthcare_logo.png";
 import "./Navigation.css";
 import { unsetLogged } from "../../state/logged/logSlice";
 import Logout from "../../utils/Logout";
+import { setDark, setLight } from "../../state/theme/themeSlice";
 
 const Navigation = () => {
   const userType = useSelector((state: RootState) => state.user.value);
   const logStatus = useSelector((state: RootState) => state.log.value);
+  const theme = useSelector((state: RootState) => state.theme.value);
   const [menuOpen, setMenuOpen] = useState(false);
   const [viewPortWidth, setViewPortWidth] = useState(window.innerWidth);
+  const dispatch = useDispatch();
 
   useEffect(() => {
+    if (theme) {
+      document.body.style.backgroundColor = "#282a36";
+    } else {
+      document.body.style.backgroundColor = "#f5f5f5";
+    }
     const handleResize = () => {
       setViewPortWidth(window.innerWidth);
       if (window.innerWidth > 1024) setMenuOpen(false);
@@ -29,9 +37,21 @@ const Navigation = () => {
     setMenuOpen(!menuOpen);
   }
 
+  function handleTheme(e: React.ChangeEvent<HTMLInputElement>) {
+    if (e.target.checked) {
+      document.body.style.backgroundColor = "#282a36";
+      dispatch(setDark());
+    } else {
+      document.body.style.backgroundColor = "#f5f5f5";
+      dispatch(setLight());
+    }
+  }
+
+  console.log(userType, logStatus);
+
   return (
-    <nav className="navbar">
-      <div className="navbar-brand">
+    <nav className={`navbar ${theme ? "nav-dark" : "nav-light"}`}>
+      <div className={`navbar-brand ${theme ? "navimg-dark" : "navimg-light"}`}>
         <Link to="/">
           <img src={logoImage} alt="logo" className="logo" />
         </Link>
@@ -53,6 +73,12 @@ const Navigation = () => {
           {userType === 0 && NotloggedNavigation()}
           {logStatus && userType === 1 && DoctorNavigation()}
           {logStatus && userType === 2 && PatientNavigation()}
+          <div className="nav-switch-div">
+            <label className="nav-switch">
+              <input type="checkbox" checked={theme} onChange={handleTheme} />
+              <span className="nav-slider"></span>
+            </label>
+          </div>
         </ul>
       </div>
     </nav>
@@ -122,7 +148,8 @@ function PatientNavigation() {
   const dispatch = useDispatch();
 
   const HandleLogout = async () => {
-    localStorage.removeItem("token");
+    document.cookie =
+      "Authorization=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
     dispatch(unsetLogged());
     await Logout();
   };
