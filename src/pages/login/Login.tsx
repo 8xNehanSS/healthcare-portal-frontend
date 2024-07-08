@@ -6,27 +6,31 @@ import "./Login.css";
 import { setDoctor, setPatient, setPublic } from "../../state/user/userSlice";
 import CheckLogin from "../../utils/CheckLogin";
 import { setLogged } from "../../state/logged/logSlice";
+import { setUser } from "../../state/data/dataSlice";
 
 const Login: React.FC = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const [isDoctor, setIsDoctor] = useState(false);
 
   const handleUsernameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setError(false);
     setUsername(event.target.value);
   };
 
   const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setError(false);
     setPassword(event.target.value);
   };
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     try {
-      let type = 0;
+      let type = 2;
       let email = username;
       if (isDoctor) {
         type = 1;
@@ -37,13 +41,14 @@ const Login: React.FC = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email, password, type }),
+        body: JSON.stringify({ username, email, password, type }),
       });
 
       if (response.ok) {
         if (type === 1) {
           dispatch(setDoctor());
-        } else {
+        }
+        if (type === 2) {
           dispatch(setPatient());
         }
         dispatch(setLogged());
@@ -51,6 +56,7 @@ const Login: React.FC = () => {
       } else {
         // Handle failed login
         console.log("Login failed");
+        setError(true);
       }
     } catch (error) {
       // Handle error
@@ -59,22 +65,27 @@ const Login: React.FC = () => {
   };
 
   function handleRadioButton() {
+    setError(false);
     setIsDoctor(!isDoctor);
   }
 
   useEffect(() => {
     const checkTokenValidity = async () => {
       const data = await CheckLogin();
-      console.log(data);
-      if (data.valid) {
-        if (data.type === 1) {
+      if (data && data.valid) {
+        dispatch(setUser(data));
+        dispatch(setLogged());
+        if (data.loginType === 1) {
           dispatch(setDoctor());
-        } else if (data.type === 2) {
+          navigate("/");
+        } else if (data.loginType === 2) {
           dispatch(setPatient());
+          navigate("/");
         } else {
           dispatch(setPublic());
         }
-        navigate("/");
+      } else {
+        navigate("/login");
       }
     };
 
@@ -128,6 +139,11 @@ const Login: React.FC = () => {
               placeholder="Password"
             />
           </div>
+          {error && (
+            <div className="login-error">
+              <p>Invalid username or password</p>
+            </div>
+          )}
           <button className="login-button" type="submit">
             Login
           </button>

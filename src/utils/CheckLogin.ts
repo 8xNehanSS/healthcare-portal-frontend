@@ -1,3 +1,5 @@
+import Data from "./userData";
+
 const CheckTokenStatus = async () => {
   try {
     const response = await fetch("http://localhost:3000/validate", {
@@ -10,19 +12,26 @@ const CheckTokenStatus = async () => {
 
     if (response.ok) {
       const data = await response.json();
-      return { valid: true, type: data.loginType, userID: data.login };
+      const userData = new Data(
+        true,
+        data.login,
+        data.loginType,
+        data.user.ID,
+        data.user.FirstName,
+        data.user.LastName
+      );
+      return userData;
     } else {
-      return { valid: false, type: 0, userID: 0 };
+      return null;
     }
   } catch (error) {
     console.error("An error occurred:", error);
-    return { valid: false, type: 0, userID: 0 };
+    return null;
   }
 };
 
 async function CheckLogin() {
-  let checkUser = { valid: false, type: 0, userID: 0 };
-  checkUser = await CheckTokenStatus();
+  let checkUser = await CheckTokenStatus();
   return checkUser;
 }
 

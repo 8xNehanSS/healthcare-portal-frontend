@@ -1,10 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-interface LoaderState {
+interface userState {
   value: number;
 }
 
-const initialState: LoaderState = {
+const initialState: userState = {
   value: 0,
 };
 
