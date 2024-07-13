@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setDoctor, setPatient, setPublic } from "../../state/user/userSlice";
 import CheckLogin from "../../utils/CheckLogin";
@@ -7,14 +7,13 @@ import { setLogged } from "../../state/logged/logSlice";
 import { RootState } from "../../state/store";
 import { setUser } from "../../state/data/dataSlice";
 import "./Home.css";
-import heroBgImage from "../../assets/images/homebg.png";
-import News from "../../utils/news";
 import NewsList from "./news/News";
 
 const Home = () => {
   const user = useSelector((state: RootState) => state.data.value);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [data, setData] = useState({ news: [], stories: [] });
   useEffect(() => {
     const checkTokenValidity = async () => {
       const data = await CheckLogin();
@@ -36,12 +35,35 @@ const Home = () => {
 
     checkTokenValidity();
   }, []);
+  useEffect(() => {
+    const getPublicData = async () => {
+      const response = await fetch("http://localhost:3000/getpublic", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      const data = await response.json();
+      setData(data);
+    };
 
-  const suffix = user.loginType === 1 ? "Dr." : "Patient";
-  const text =
-    user.loginType === 1
-      ? "Here you can manage your patients and appointments"
-      : "Here you can manage your appointments and prescriptions";
+    getPublicData();
+  }, []);
+
+  let suffix = "HealthCare Portal";
+  if (user.loginType === 1) {
+    suffix = "Dr.";
+  } else if (user.loginType === 2) {
+    suffix = "Patient";
+  }
+
+  let text =
+    "Have all your medical history at one place with all your needs! Register now to get started!";
+  if (user.loginType === 1) {
+    text = "Manage your patients and appointments with ease!";
+  } else if (user.loginType === 2) {
+    text = "Manage your appointments and prescriptions with ease!";
+  }
 
   return (
     <>
@@ -58,63 +80,21 @@ const Home = () => {
                 navigate("/dashboard");
               }}
             >
-              Dashboard
+              {!user.valid ? "Login" : "Dashboard"}
             </button>
           </div>
         </div>
       </div>
       <div className="news-list-main-container">
-        <NewsList news={news} name="Portal Updates" />
-        <NewsList news={news} name="Medical Stories" />
+        <NewsList news={data.news} name="Portal Updates" className="newslist" />
+        <NewsList
+          news={data.stories}
+          name="Medical Stories"
+          className="newslist"
+        />
       </div>
     </>
   );
 };
 
 export default Home;
-
-const news: News[] = [
-  new News(
-    1,
-    "New Feature",
-    "We have added a new feature that allows you to view your medical history"
-  ),
-  new News(
-    2,
-    "New Feature",
-    "We have added a new feature that allows you to view your medical history"
-  ),
-  new News(
-    3,
-    "New Feature",
-    "We have added a new feature that allows you to view your medical history"
-  ),
-  new News(
-    4,
-    "New Feature",
-    "We have added a new feature that allows you to view your medical history"
-  ),
-];
-
-const news2: News[] = [
-  new News(
-    1,
-    "New Feature",
-    "We have added a new feature that allows you to view your medical history"
-  ),
-  new News(
-    2,
-    "New Feature",
-    "We have added a new feature that allows you to view your medical history"
-  ),
-  new News(
-    3,
-    "New Feature",
-    "We have added a new feature that allows you to view your medical history"
-  ),
-  new News(
-    4,
-    "New Feature",
-    "We have added a new feature that allows you to view your medical history"
-  ),
-];

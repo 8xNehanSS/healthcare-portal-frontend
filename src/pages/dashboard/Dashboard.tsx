@@ -1,12 +1,12 @@
 import { useEffect } from "react";
-import { useDispatch } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
 import { setUser } from "../../state/data/dataSlice";
 import { setLogged } from "../../state/logged/logSlice";
 import { setDoctor, setPatient, setPublic } from "../../state/user/userSlice";
 import CheckLogin from "../../utils/CheckLogin";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
-const Patients = () => {
+const Dashboard = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   useEffect(() => {
@@ -21,7 +21,6 @@ const Patients = () => {
             dispatch(setDoctor());
           } else if (data.loginType === 2) {
             dispatch(setPatient());
-            navigate("/dashboard");
           } else {
             dispatch(setPublic());
           }
@@ -37,10 +36,9 @@ const Patients = () => {
   }, []);
   return (
     <div>
-      <h1>Patients</h1>
-      <Link to="/patients/register">Register</Link>
+      <h1>Dashboard</h1>
     </div>
   );
 };
 
-export default Patients;
+export default Dashboard;

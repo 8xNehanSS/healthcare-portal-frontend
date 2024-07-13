@@ -91,7 +91,7 @@ function NotloggedNavigation() {
   return (
     <>
       <li>
-        <Link to="/home">Home</Link>
+        <Link to="/">Home</Link>
       </li>
       <li>
         <Link to="/what-people-say">Reviews</Link>

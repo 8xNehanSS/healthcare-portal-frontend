@@ -22,6 +22,7 @@ import Loader from "./components/common/Loader";
 import "./index.css";
 import Patients from "./pages/patients/Patients";
 import RegisterPatients from "./pages/patients/register/Register";
+import Dashboard from "./pages/dashboard/Dashboard";
 
 export default function App() {
   const loader = useSelector((state: RootState) => state.loader.value);
@@ -51,6 +52,7 @@ export default function App() {
           <Route path="/about-us" element={<AboutUs />} />
           <Route path="/patients" element={<Patients />} />
           <Route path="/patients/register" element={<RegisterPatients />} />
+          <Route path="/dashboard" element={<Dashboard />} />
         </Route>
       </Routes>
     </BrowserRouter>

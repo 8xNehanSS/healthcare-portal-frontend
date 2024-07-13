@@ -248,6 +248,7 @@ const Register = () => {
           dispatch(setDoctor());
         } else if (data.loginType === 2) {
           dispatch(setPatient());
+          navigate("/dashboard");
         } else {
           dispatch(setPublic());
         }
