@@ -13,7 +13,7 @@ import { endLoader } from "./state/loader/loaderSlice";
 
 // pages
 import Layout from "./components/layout/Layout";
-import Home from "./pages/Home";
+import Home from "./pages/home/Home";
 import Login from "./pages/login/Login";
 import AboutUs from "./pages/About";
 

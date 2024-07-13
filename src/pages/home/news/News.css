@@ -1,0 +1,14 @@
+.news-list {
+  border: solid black 3px;
+  color: white;
+  padding: 0px 50px;
+  padding-bottom: 50px;
+  border-radius: 10px;
+  background-color: rgba(0, 0, 0, 0.326);
+}
+
+.news-list-heading {
+  font-size: 2rem;
+  font-weight: 600;
+  text-align: center;
+}

@@ -1,0 +1,57 @@
+.home {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 100px 0;
+  background-image: url("../../assets/images/homebg.png");
+}
+
+.home-hero-container {
+  margin-top: 30px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: fit-content;
+  padding: 50px 100px;
+  border-radius: 20px;
+  background-color: rgba(0, 0, 0, 0.326);
+  backdrop-filter: blur(30px);
+}
+
+.home-hero-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.home-hero-welcome {
+  font-size: 2rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.home-hero-text {
+  padding: 10px 0px;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #333;
+  text-align: center;
+}
+
+.home-hero-button {
+  margin-top: 20px;
+  --button-color: #333;
+  --button-color-hover: #fff;
+}
+
+.news-list-main-container {
+  display: flex;
+  flex-direction: row;
+  gap: 50px;
+  justify-content: center;
+  align-items: center;
+  padding: 50px 0;
+}
