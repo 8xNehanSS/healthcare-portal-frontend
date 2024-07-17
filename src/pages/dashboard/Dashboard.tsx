@@ -3,10 +3,14 @@ import { setUser } from "../../state/data/dataSlice";
 import { setLogged } from "../../state/logged/logSlice";
 import { setDoctor, setPatient, setPublic } from "../../state/user/userSlice";
 import CheckLogin from "../../utils/CheckLogin";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { RootState } from "../../state/store";
+import DoctorDash from "./doctor/DoctorDash";
+import PatientDash from "./patient/PatientDash";
 
 const Dashboard = () => {
+  const user = useSelector((state: RootState) => state.data.value);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   useEffect(() => {
@@ -34,11 +38,7 @@ const Dashboard = () => {
 
     checkTokenValidity();
   }, []);
-  return (
-    <div>
-      <h1>Dashboard</h1>
-    </div>
-  );
+  return <div>{user.loginType === 1 ? <DoctorDash /> : <PatientDash />}</div>;
 };
 
 export default Dashboard;

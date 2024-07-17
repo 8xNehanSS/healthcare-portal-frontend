@@ -52,7 +52,7 @@ const Login: React.FC = () => {
           dispatch(setPatient());
         }
         dispatch(setLogged());
-        navigate("/");
+        navigate("/dashboard");
       } else {
         // Handle failed login
         console.log("Login failed");
@@ -77,10 +77,10 @@ const Login: React.FC = () => {
         dispatch(setLogged());
         if (data.loginType === 1) {
           dispatch(setDoctor());
-          navigate("/");
+          navigate("/dashboard");
         } else if (data.loginType === 2) {
           dispatch(setPatient());
-          navigate("/");
+          navigate("/dashboard");
         } else {
           dispatch(setPublic());
         }
