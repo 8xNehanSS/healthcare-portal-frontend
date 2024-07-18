@@ -7,7 +7,7 @@ import { setLogged } from "../../state/logged/logSlice";
 import { RootState } from "../../state/store";
 import { setUser } from "../../state/data/dataSlice";
 import "./Home.css";
-import NewsList from "./news/News";
+import NewsList from "../../components/common/news/News";
 
 const Home = () => {
   const user = useSelector((state: RootState) => state.data.value);

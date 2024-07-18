@@ -63,3 +63,52 @@
   margin-left: 20px;
   border-radius: 20px;
 }
+
+.docdash-section2-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #3f51b5a1;
+  border-radius: 10px;
+  margin: 0px 20px;
+  padding: 30px 10px;
+  text-align: left;
+}
+
+.docdash-table {
+  width: 90%;
+}
+
+.docdash-table th {
+  padding: 0;
+  text-indent: 40px;
+  margin: 0;
+  font-size: 20px;
+  font-weight: 500;
+}
+
+.docdash-table-btn {
+  background-color: #3f51b5;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 5px 10px;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.docdash-table-btn-parent {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.docdash-section3-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.docdash-newslist {
+  width: 100%;
+}

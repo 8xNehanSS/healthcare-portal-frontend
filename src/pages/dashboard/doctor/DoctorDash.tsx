@@ -1,3 +1,4 @@
+import NewsList from "../../../components/common/news/News";
 import "./DoctorDash.css";
 
 const DoctorDash = () => {
@@ -41,6 +42,48 @@ const DoctorDash = () => {
             <p className="docdash-section1-number">{appointment_requests}</p>
           </div>
         </div>
+      </div>
+      <h3 className="docdash-heading">Upcoming Appointments</h3>
+      <div className="docdash-section2-container">
+        <table className="docdash-table">
+          <tr>
+            <th>
+              Patient Name
+              <hr />
+            </th>
+            <th>
+              Date
+              <hr />
+            </th>
+            <th>
+              Time
+              <hr />
+            </th>
+            <th>
+              Actions
+              <hr />
+            </th>
+          </tr>
+          <tr>
+            <td>John Doe</td>
+            <td>12/12/2021</td>
+            <td>10:00 AM</td>
+            <td className="docdash-table-btn-parent">
+              <button className="docdash-table-btn">View</button>
+            </td>
+          </tr>
+          <tr>
+            <td>Jane Doe</td>
+            <td>12/12/2021</td>
+            <td>11:00 AM</td>
+            <td className="docdash-table-btn-parent">
+              <button className="docdash-table-btn">View</button>
+            </td>
+          </tr>
+        </table>
+      </div>
+      <div className="docdash-section3-container">
+        <NewsList news={[]} name="Updates" className="docdash-newslist" />
       </div>
     </div>
   );
