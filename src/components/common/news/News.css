@@ -1,5 +1,5 @@
 .news-list {
-  max-width: 500px;
+  width: auto;
   border: solid black 3px;
   color: white;
   padding: 0px 50px;
@@ -9,7 +9,7 @@
 }
 
 .news-list-heading {
-  font-size: 2rem;
+  font-size: 20px;
   font-weight: 600;
   text-align: center;
   padding-bottom: 20px;

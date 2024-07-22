@@ -1,0 +1,15 @@
+.small-loader-float-num {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.small-loader-spinner-float-num {
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #3498db;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  margin: 0;
+  animation: spin 1s linear infinite;
+}
