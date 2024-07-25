@@ -2,6 +2,9 @@ import { useEffect, useState } from "react";
 import NewsList from "../../../components/common/news/News";
 import "./DoctorDash.css";
 import SmallLoader from "../../../components/common/SmallLoader";
+import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../state/store";
 
 const DoctorDash = () => {
   const [today_appointments, setTodayAppointments] = useState(0);
@@ -30,7 +33,7 @@ const DoctorDash = () => {
           setUpcomingAppointments(data.upcomingA);
           setTimeout(() => {
             setLoading(false);
-          }, 1000);
+          }, 3000);
         }
       } catch (error) {
         console.log(error);
@@ -108,25 +111,15 @@ const DoctorDash = () => {
             <th>Time</th>
             <th>Actions</th>
           </tr>
-          <tr>
-            <td>John Doe</td>
-            <td>12/12/2021</td>
-            <td>10:00 AM</td>
-            <td className="docdash-table-btn-parent">
-              <button className="docdash-table-btn">View</button>
-              <button className="docdash-table-btn">Take In</button>
-            </td>
-          </tr>
-          <tr>
-            <td>Jane Doe</td>
-            <td>12/12/2021</td>
-            <td>11:00 AM</td>
-            <td className="docdash-table-btn-parent">
-              <button className="docdash-table-btn">View</button>
-              <button className="docdash-table-btn">Take In</button>
-            </td>
-          </tr>
-          <TableRows data={upcoming_appointments} />
+          {loading ? (
+            <>
+              <TableRowsEmpty />
+              <TableRowsEmpty />
+              <TableRowsEmpty />
+            </>
+          ) : (
+            <TableRows data={upcoming_appointments} />
+          )}
         </table>
       </div>
       <div className="docdash-section3-container">
@@ -139,16 +132,59 @@ const DoctorDash = () => {
 export default DoctorDash;
 
 const TableRows = (props: any) => {
+  const user = useSelector((state: RootState) => state.data.value);
+  const navigate = useNavigate();
   const records = props.data;
+  const handleViewAppointment = (e: React.MouseEvent<HTMLButtonElement>) => {
+    localStorage.setItem("lastOpenedAppointment", e.currentTarget.id);
+    navigate("/view-appointment/" + user.userID + "/" + e.currentTarget.id);
+  };
+  const handleTakeInAppointment = (e: React.MouseEvent<HTMLButtonElement>) => {
+    console.log(e.currentTarget.id);
+  };
   return records.map((item: any) => (
     <tr>
       <td>{item.PatientNamef + " " + item.PatientNamel}</td>
-      <td>{item.Date}</td>
-      <td>{item.Date}</td>
+      <td>{new Date(item.Date).toLocaleDateString()}</td>
+      <td>{new Date(item.Date).toLocaleTimeString()}</td>
       <td className="docdash-table-btn-parent">
-        <button className="docdash-table-btn">View</button>
-        <button className="docdash-table-btn">Take In</button>
+        <button
+          id={item.ID}
+          className="docdash-table-btn"
+          onClick={handleViewAppointment}
+        >
+          View
+        </button>
+        <button
+          id={item.ID}
+          className="docdash-table-btn"
+          onClick={handleTakeInAppointment}
+        >
+          Take In
+        </button>
       </td>
     </tr>
   ));
+};
+
+const TableRowsEmpty = () => {
+  return (
+    <>
+      <tr className="transition-rows-dashboard">
+        <td className="empty-table-entry">
+          <div className="empty-table-entry-inside"></div>
+        </td>
+        <td className="empty-table-entry">
+          <div className="empty-table-entry-inside"></div>
+        </td>
+        <td className="empty-table-entry">
+          <div className="empty-table-entry-inside"></div>
+        </td>
+        <td className="docdash-table-btn-parent">
+          <button className="docdash-table-btn">View</button>
+          <button className="docdash-table-btn">Take In</button>
+        </td>
+      </tr>
+    </>
+  );
 };

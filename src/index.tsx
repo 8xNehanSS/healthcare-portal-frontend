@@ -23,6 +23,8 @@ import "./index.css";
 import Patients from "./pages/patients/Patients";
 import RegisterPatients from "./pages/patients/register/Register";
 import Dashboard from "./pages/dashboard/Dashboard";
+import Appointment from "./pages/appointments/appointment/Appointment";
+import AllAppointments from "./pages/appointments/AllAppointments";
 
 export default function App() {
   const loader = useSelector((state: RootState) => state.loader.value);
@@ -53,6 +55,11 @@ export default function App() {
           <Route path="/patients" element={<Patients />} />
           <Route path="/patients/register" element={<RegisterPatients />} />
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route
+            path="/view-appointment/:docid/:id"
+            element={<Appointment />}
+          />
+          <Route path="/appointments" element={<AllAppointments />} />
         </Route>
       </Routes>
     </BrowserRouter>

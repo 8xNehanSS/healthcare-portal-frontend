@@ -76,7 +76,23 @@
 }
 
 .docdash-table {
-  width: 90%;
+  padding: 0px 40px;
+  table-layout: fixed;
+  width: 100%;
+}
+
+@keyframes fadeInOut {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.3;
+  }
+}
+
+.transition-rows-dashboard {
+  animation: fadeInOut 1.3s infinite;
 }
 
 .docdash-table th {
@@ -104,4 +120,9 @@
 
 .docdash-section3-container {
   margin: 30px 20px;
+}
+
+.empty-table-entry-inside {
+  padding: 10px;
+  background-color: rgba(240, 248, 255, 0.159);
 }
