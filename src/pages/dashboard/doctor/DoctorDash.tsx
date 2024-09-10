@@ -5,13 +5,17 @@ import SmallLoader from "../../../components/common/SmallLoader";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../state/store";
+import { on } from "events";
 
 const DoctorDash = () => {
-  const [today_appointments, setTodayAppointments] = useState(0);
-  const [today_comp_appointments, setTodayCompAppointments] = useState(0);
-  const [appointment_requests, setAppointmentRequests] = useState(0);
-  const [upcoming_appointments, setUpcomingAppointments] = useState([]);
+  const [todayAppointmentCount, setTodayAppointmentCount] = useState(0);
+  const [completedAppointmentCount, setCompletedAppointmentCount] = useState(0);
+  const [appointmentRequestCount, setAppointmentRequestCount] = useState(0);
+  const [upcomingAppointments, setUpcomingAppointments] = useState([]);
+  const [ongoingApointments, setOngoingAppointments] = useState([]);
+  const [requestedAppointments, setRequestedAppointments] = useState([]);
   const [loading, setLoading] = useState(true);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -27,10 +31,12 @@ const DoctorDash = () => {
         );
         const data = await response.json();
         if (response.ok) {
-          setTodayAppointments(data.todayCount);
-          setTodayCompAppointments(data.completedCount);
-          setAppointmentRequests(data.requestedCount);
+          setTodayAppointmentCount(data.todayCount);
+          setCompletedAppointmentCount(data.completedCount);
+          setAppointmentRequestCount(data.requestedCount);
           setUpcomingAppointments(data.upcomingA);
+          setOngoingAppointments(data.ongoingA);
+          setRequestedAppointments(data.requestedA);
           setTimeout(() => {
             setLoading(false);
           }, 3000);
@@ -58,7 +64,9 @@ const DoctorDash = () => {
             ) : (
               <>
                 <h3>Today's Appointments</h3>
-                <p className="docdash-section1-number">{today_appointments}</p>
+                <p className="docdash-section1-number">
+                  {todayAppointmentCount}
+                </p>
               </>
             )}
           </div>
@@ -74,9 +82,9 @@ const DoctorDash = () => {
               <SmallLoader />
             ) : (
               <>
-                <h3>Compeleted Appointments</h3>
+                <h3>Completed Appointments</h3>
                 <p className="docdash-section1-number">
-                  {today_comp_appointments}
+                  {completedAppointmentCount}
                 </p>
               </>
             )}
@@ -95,33 +103,37 @@ const DoctorDash = () => {
               <>
                 <h3>Appointment Requests</h3>
                 <p className="docdash-section1-number">
-                  {appointment_requests}
+                  {appointmentRequestCount}
                 </p>
               </>
             )}
           </div>
         </div>
       </div>
-      <h3 className="docdash-heading">Upcoming Appointments</h3>
-      <div className="docdash-section2-container">
-        <table className="docdash-table">
-          <tr>
-            <th>Patient Name</th>
-            <th>Date</th>
-            <th>Time</th>
-            <th>Actions</th>
-          </tr>
-          {loading ? (
-            <>
-              <TableRowsEmpty />
-              <TableRowsEmpty />
-              <TableRowsEmpty />
-            </>
-          ) : (
-            <TableRows data={upcoming_appointments} />
-          )}
-        </table>
-      </div>
+      {/* {generateTableDash(
+        0,
+        "Ongoing Appointments",
+        ongoingApointments,
+        loading
+      )} */}
+      {generateTableDash(
+        1,
+        "Upcoming Appointments",
+        upcomingAppointments,
+        setUpcomingAppointments,
+        ongoingApointments,
+        setOngoingAppointments,
+        loading
+      )}
+      {generateTableDash(
+        2,
+        "Requested Appointments",
+        requestedAppointments,
+        setRequestedAppointments,
+        upcomingAppointments,
+        setUpcomingAppointments,
+        loading
+      )}
       <div className="docdash-section3-container">
         <NewsList news={[]} name="UPDATES" className="docdash-newslist" />
       </div>
@@ -131,6 +143,48 @@ const DoctorDash = () => {
 
 export default DoctorDash;
 
+function generateTableDash(
+  type: number,
+  name: string,
+  appointments: any,
+  appointmentsSetter: any,
+  secondaryAppointments: any,
+  secondaryAppointmentsSetter: any,
+  loadingBool: boolean
+) {
+  return (
+    <div>
+      <h3 className="docdash-heading">{name}</h3>
+      <div className="docdash-section2-container">
+        <table className="docdash-table">
+          <tr>
+            <th>Patient Name</th>
+            <th>Date</th>
+            <th>Time</th>
+            <th>Actions</th>
+          </tr>
+          {loadingBool ? (
+            <>
+              <TableRowsEmpty />
+              <TableRowsEmpty />
+              <TableRowsEmpty />
+            </>
+          ) : (
+            <TableRows
+              data={appointments}
+              type={type}
+              appointmentsOne={appointments}
+              appointmentsTwo={secondaryAppointments}
+              setter1={appointmentsSetter}
+              setter2={secondaryAppointmentsSetter}
+            />
+          )}
+        </table>
+      </div>
+    </div>
+  );
+}
+
 const TableRows = (props: any) => {
   const user = useSelector((state: RootState) => state.data.value);
   const navigate = useNavigate();
@@ -139,9 +193,16 @@ const TableRows = (props: any) => {
     localStorage.setItem("lastOpenedAppointment", e.currentTarget.id);
     navigate("/view-appointment/" + user.userID + "/" + e.currentTarget.id);
   };
-  const handleTakeInAppointment = (e: React.MouseEvent<HTMLButtonElement>) => {
-    console.log(e.currentTarget.id);
+  const handleButtonTwoClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    // have to complete this function
   };
+  if (records == null || records.length == 0) {
+    return (
+      <tr>
+        <td>No Records</td>
+      </tr>
+    );
+  }
   return records.map((item: any) => (
     <tr>
       <td>{item.PatientNamef + " " + item.PatientNamel}</td>
@@ -158,9 +219,14 @@ const TableRows = (props: any) => {
         <button
           id={item.ID}
           className="docdash-table-btn"
-          onClick={handleTakeInAppointment}
+          onClick={handleButtonTwoClick}
         >
-          Take In
+          {
+            // type 0 is for ongoing appointments
+            // type 1 is for upcoming appointments
+            // type 2 is for requested appointments
+            props.type === 0 ? "End" : props.type === 1 ? "Take In" : "Accept"
+          }
         </button>
       </td>
     </tr>
@@ -182,7 +248,7 @@ const TableRowsEmpty = () => {
         </td>
         <td className="docdash-table-btn-parent">
           <button className="docdash-table-btn">View</button>
-          <button className="docdash-table-btn">Take In</button>
+          <button className="docdash-table-btn">Action</button>
         </td>
       </tr>
     </>
