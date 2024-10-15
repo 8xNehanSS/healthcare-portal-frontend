@@ -110,12 +110,15 @@ const DoctorDash = () => {
           </div>
         </div>
       </div>
-      {/* {generateTableDash(
+      {generateTableDash(
         0,
         "Ongoing Appointments",
         ongoingApointments,
+        setOngoingAppointments,
+        null,
+        null,
         loading
-      )} */}
+      )}
       {generateTableDash(
         1,
         "Upcoming Appointments",
@@ -193,9 +196,30 @@ const TableRows = (props: any) => {
     localStorage.setItem("lastOpenedAppointment", e.currentTarget.id);
     navigate("/view-appointment/" + user.userID + "/" + e.currentTarget.id);
   };
+
   const handleButtonTwoClick = (e: React.MouseEvent<HTMLButtonElement>) => {
-    // have to complete this function
+    if (props.type === 0) {
+      handleEndAppointment(e);
+      return;
+    }
+    const index = parseInt(e.currentTarget.id) - 1;
+    const appointment = props.appointmentsOne[index];
+    const updatedAppointmentsOne = [...props.appointmentsOne];
+    updatedAppointmentsOne.splice(index, 1);
+    props.setter1(updatedAppointmentsOne);
+    const appointmentsTwo = props.appointmentsTwo || [];
+    props.setter2(appointmentsTwo.concat(appointment));
   };
+
+  const handleEndAppointment = async (
+    e: React.MouseEvent<HTMLButtonElement>
+  ) => {
+    const index = parseInt(e.currentTarget.id) - 1;
+    const updatedAppointmentsOne = [...props.appointmentsOne];
+    updatedAppointmentsOne.splice(index, 1);
+    props.setter1(updatedAppointmentsOne);
+  };
+
   if (records == null || records.length == 0) {
     return (
       <tr>
