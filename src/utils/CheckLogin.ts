@@ -9,16 +9,16 @@ const CheckTokenStatus = async () => {
         "Content-Type": "application/json",
       },
     });
-
     if (response.ok) {
       const data = await response.json();
+      console.log(data);
       const userData = new Data(
         true,
-        data.login,
+        data.userID,
+        data.username,
         data.loginType,
-        data.user.ID,
-        data.user.FirstName,
-        data.user.LastName
+        data.firstname,
+        data.lastname
       );
       return userData;
     } else {
