@@ -6,14 +6,22 @@ import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../state/store";
 import Appointment from "../../../utils/appointment";
+import TableComp from "./Table";
 
 const DoctorDash = () => {
+  const user = useSelector((state: RootState) => state.data.value);
   const [todayAppointmentCount, setTodayAppointmentCount] = useState(0);
   const [completedAppointmentCount, setCompletedAppointmentCount] = useState(0);
   const [appointmentRequestCount, setAppointmentRequestCount] = useState(0);
-  const [upcomingAppointments, setUpcomingAppointments] = useState([]);
-  const [ongoingApointments, setOngoingAppointments] = useState([]);
-  const [requestedAppointments, setRequestedAppointments] = useState([]);
+  const [upcomingAppointments, setUpcomingAppointments] = useState<
+    Appointment[]
+  >([]);
+  const [ongoingApointments, setOngoingAppointments] = useState<Appointment[]>(
+    []
+  );
+  const [requestedAppointments, setRequestedAppointments] = useState<
+    Appointment[]
+  >([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -34,10 +42,10 @@ const DoctorDash = () => {
           setTodayAppointmentCount(data.todayCount);
           setCompletedAppointmentCount(data.completedCount);
           setAppointmentRequestCount(data.requestedCount);
-          parseAppointmentData(data.upcomingA, data.ongoingA, data.requestedA);
-          setTimeout(() => {
-            setLoading(false);
-          }, 3000);
+          setUpcomingAppointments(parseAppointmentData(data.upcomingA));
+          setRequestedAppointments(parseAppointmentData(data.requestedA));
+          setOngoingAppointments(parseAppointmentData(data.ongoingA));
+          setLoading(false);
         }
       } catch (error) {
         console.log(error);
@@ -46,154 +54,66 @@ const DoctorDash = () => {
     fetchData();
   }, []);
 
-  function parseAppointmentData(
-    upcomingA: any,
-    ongoingA: any,
-    requestedA: any
-  ) {
-    const upcomingAppointments = upcomingA.map((appointment: any) => {
-      return new Appointment(
-        appointment.ID,
-        appointment.PatientID,
-        appointment.DoctorID,
-        new Date(appointment.Date),
-        appointment.Reason,
-        appointment.IsAccepted,
-        appointment.IsCompleted,
-        appointment.IsOngoing
-      );
-    });
-    setUpcomingAppointments(upcomingAppointments);
-
-    const ongoingAppointments = ongoingA.map((appointment: any) => {
-      return new Appointment(
-        appointment.ID,
-        appointment.PatientID,
-        appointment.DoctorID,
-        new Date(appointment.Date),
-        appointment.Reason,
-        appointment.IsAccepted,
-        appointment.IsCompleted,
-        appointment.IsOngoing
-      );
-    });
-    setOngoingAppointments(ongoingAppointments);
-
-    const requestedAppointments = requestedA.map((appointment: any) => {
-      return new Appointment(
-        appointment.ID,
-        appointment.PatientID,
-        appointment.DoctorID,
-        new Date(appointment.Date),
-        appointment.Reason,
-        appointment.IsAccepted,
-        appointment.IsCompleted,
-        appointment.IsOngoing
-      );
-    });
-    setRequestedAppointments(requestedAppointments);
+  function parseAppointmentData(appointments: any) {
+    if (appointments == null) return [];
+    const appointmentsParsed: Appointment[] = appointments.map(
+      (appointment: any) => {
+        return new Appointment(
+          appointment.ID,
+          appointment.PatientID,
+          appointment.DoctorID,
+          new Date(appointment.Date),
+          appointment.Status,
+          appointment.PatientNamef,
+          appointment.PatientNamel,
+          appointment.Reason
+        );
+      }
+    );
+    return appointmentsParsed;
   }
-
-  const columns = [
-    {
-      Header: "ID",
-      accessor: "ID", // accessor maps to the "id" field in the data
-    },
-    {
-      Header: "Name",
-      accessor: "patientID", // accessor maps to the "name" field in the data
-    },
-  ];
 
   return (
     <div className="docdash">
-      <h2 className="docdash-heading">Doctor Dashboard</h2>
+      <h2 className="docdash-heading">
+        Welcome Dr. {user.firstName} {user.lastName}
+      </h2>
       <div className="docdash-section1">
-        <div className="docdash-section1-container">
-          <img
-            src="https://www.w3schools.com/howto/img_avatar.png"
-            alt="Avatar"
-            className="docdash-section1-img"
-          />
-          <div>
-            {loading ? (
-              <SmallLoader />
-            ) : (
-              <>
-                <h3>Today's Appointments</h3>
-                <p className="docdash-section1-number">
-                  {todayAppointmentCount}
-                </p>
-              </>
-            )}
-          </div>
-        </div>
-        <div className="docdash-section1-container">
-          <img
-            src="https://www.w3schools.com/howto/img_avatar.png"
-            alt="Avatar"
-            className="docdash-section1-img"
-          />
-          <div>
-            {loading ? (
-              <SmallLoader />
-            ) : (
-              <>
-                <h3>Completed Appointments</h3>
-                <p className="docdash-section1-number">
-                  {completedAppointmentCount}
-                </p>
-              </>
-            )}
-          </div>
-        </div>
-        <div className="docdash-section1-container">
-          <img
-            src="https://www.w3schools.com/howto/img_avatar.png"
-            alt="Avatar"
-            className="docdash-section1-img"
-          />
-          <div>
-            {loading ? (
-              <SmallLoader />
-            ) : (
-              <>
-                <h3>Appointment Requests</h3>
-                <p className="docdash-section1-number">
-                  {appointmentRequestCount}
-                </p>
-              </>
-            )}
-          </div>
+        <CounterComponent
+          count={todayAppointmentCount}
+          text="Today's Appointments"
+          loading={loading}
+        />
+        <CounterComponent
+          count={completedAppointmentCount}
+          text="Completed Appointments"
+          loading={loading}
+        />
+        <CounterComponent
+          count={appointmentRequestCount}
+          text="Appointment Requests"
+          loading={loading}
+        />
+      </div>
+      <div className="dashboard-table">
+        <h3 className="docdash-heading">Ongoing Appointments</h3>
+        <div className="dashboard-table-ongoing">
+          {ongoingApointments.map((appointment) => (
+            <AppointmentComponent
+              key={appointment.ID}
+              appointments={appointment}
+            />
+          ))}
         </div>
       </div>
-      {generateTableDash(
-        0,
-        "Ongoing Appointments",
-        ongoingApointments,
-        setOngoingAppointments,
-        null,
-        null,
-        loading
-      )}
-      {generateTableDash(
-        1,
-        "Upcoming Appointments",
-        upcomingAppointments,
-        setUpcomingAppointments,
-        ongoingApointments,
-        setOngoingAppointments,
-        loading
-      )}
-      {generateTableDash(
-        2,
-        "Requested Appointments",
-        requestedAppointments,
-        setRequestedAppointments,
-        upcomingAppointments,
-        setUpcomingAppointments,
-        loading
-      )}
+      <div className="dashboard-table">
+        <h3 className="docdash-heading">Upcoming Appointments</h3>
+        <TableComp appointments={upcomingAppointments} type={1} />
+      </div>
+      <div className="dashboard-table">
+        <h3 className="docdash-heading">Requested Appointments</h3>
+        <TableComp appointments={requestedAppointments} type={2} />
+      </div>
       <div className="docdash-section3-container">
         <NewsList news={[]} name="UPDATES" className="docdash-newslist" />
       </div>
@@ -203,47 +123,64 @@ const DoctorDash = () => {
 
 export default DoctorDash;
 
-function generateTableDash(
-  type: number,
-  name: string,
-  appointments: any,
-  appointmentsSetter: any,
-  secondaryAppointments: any,
-  secondaryAppointmentsSetter: any,
-  loadingBool: boolean
-) {
+const CounterComponent = (props: any) => {
+  const count = props.count;
+  const loading = props.loading;
+  const text = props.text;
   return (
-    <div>
-      <h3 className="docdash-heading">{name}</h3>
-      <div className="docdash-section2-container">
-        <table className="docdash-table">
-          <tr>
-            <th>Patient Name</th>
-            <th>Date</th>
-            <th>Time</th>
-            <th>Actions</th>
-          </tr>
-          {loadingBool ? (
-            <>
-              <TableRowsEmpty />
-              <TableRowsEmpty />
-              <TableRowsEmpty />
-            </>
-          ) : (
-            <TableRows
-              data={appointments}
-              type={type}
-              appointmentsOne={appointments}
-              appointmentsTwo={secondaryAppointments}
-              setter1={appointmentsSetter}
-              setter2={secondaryAppointmentsSetter}
-            />
-          )}
-        </table>
+    <div className="docdash-section1-container">
+      <img
+        src="https://www.w3schools.com/howto/img_avatar.png"
+        alt="Avatar"
+        className="docdash-section1-img"
+      />
+      <div>
+        {loading ? (
+          <SmallLoader />
+        ) : (
+          <>
+            <h3>{text}</h3>
+            <p className="docdash-section1-number">{count}</p>
+          </>
+        )}
       </div>
     </div>
   );
-}
+};
+
+const AppointmentComponent = (props: any) => {
+  const appointments = props.appointments;
+  return (
+    <div className="ongoing-appointments-parentt">
+      <div className="ongoing-appointments">
+        <p>
+          <span className="ongoing-appointment-header">Patient Name: </span>
+          {appointments.patientNameF} {appointments.patientNameL}
+        </p>
+        <p>
+          <span className="ongoing-appointment-header">Date: </span>
+          {appointments.date.toLocaleDateString()}
+        </p>
+        <p>
+          <span className="ongoing-appointment-header">Time: </span>
+          {appointments.date.toLocaleTimeString()}
+        </p>
+        <p>
+          <span className="ongoing-appointment-header">Reason: </span>
+          {appointments.reason}
+        </p>
+        <p>
+          <span className="ongoing-appointment-header">Status: </span>
+          {appointments.status.toUpperCase()}
+        </p>
+      </div>
+      <div className="ongoing-appointments-buttons">
+        <button>Complete</button>
+        <button>Hold</button>
+      </div>
+    </div>
+  );
+};
 
 const TableRows = (props: any) => {
   const user = useSelector((state: RootState) => state.data.value);
@@ -312,26 +249,4 @@ const TableRows = (props: any) => {
       </td>
     </tr>
   ));
-};
-
-const TableRowsEmpty = () => {
-  return (
-    <>
-      <tr className="transition-rows-dashboard">
-        <td className="empty-table-entry">
-          <div className="empty-table-entry-inside"></div>
-        </td>
-        <td className="empty-table-entry">
-          <div className="empty-table-entry-inside"></div>
-        </td>
-        <td className="empty-table-entry">
-          <div className="empty-table-entry-inside"></div>
-        </td>
-        <td className="docdash-table-btn-parent">
-          <button className="docdash-table-btn">View</button>
-          <button className="docdash-table-btn">Action</button>
-        </td>
-      </tr>
-    </>
-  );
 };

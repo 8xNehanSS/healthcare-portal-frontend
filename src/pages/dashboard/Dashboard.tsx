@@ -6,7 +6,7 @@ import CheckLogin from "../../utils/CheckLogin";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { RootState } from "../../state/store";
-import DoctorDash from "./doctorNEW/docdash";
+import DoctorDash from "./doctor/DoctorDash";
 import PatientDash from "./patient/PatientDash";
 
 const Dashboard = () => {
